@@ -8,10 +8,12 @@ html, body {
     background-color: aliceblue;
 }
 
-h2 {
+h3 {
     margin-top: -1rem;
 }
 
 svg {
     background-color: white;
+    margin: 1rem 6rem 3rem;
+    padding: 2rem;
 }
