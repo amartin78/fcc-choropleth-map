@@ -1,25 +1,14 @@
 
 let p1 = d3.json('https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json')
-    // .then(result => {
-    //     cMap(result, 'c');
-    // });
-
 let p2 = d3.json('https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json')
-    // .then(result => {
-    //     cMap(result);
-    // });
 
 Promise.all([p1, p2])
         .then(result => {
             cMap(result);
-            // console.log(result)
         })
 
 
 function cMap(dataset) {
-
-    // console.log(dataset)
-
 
         const us = dataset[0];
         const ed = dataset[1];
@@ -43,7 +32,7 @@ function cMap(dataset) {
         const padding = 80
     
         // const color = d3.scaleQuantize([1, 10], d3.schemeBlues[9])
-        const color = d3.scaleQuantize([1, 6], d3.schemeBlues[6])
+        const color = d3.scaleQuantize([3, 75], d3.schemeBlues[8])
     
         const svg = d3.select('body')
                         .append('svg')
@@ -55,20 +44,18 @@ function cMap(dataset) {
            .selectAll('path')
            .data(topojson.feature(us, us.objects.counties).features)
            .join('path')
-            // .attr('fill', d => color(dataset.get(d.id)))
-           .attr('fill', d => {
-
-           })
-           .attr('class', 'county')
-           .attr('data-fips', d => {
-            //    console.log(d)
-               return d['id']
-           })
-           .attr('data-education', d => {
-               return ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher'];
-            //    console.log(res[0]['bachelorsOrHigher'])
-           })
-           .attr('d', path)
+            .attr('class', 'county')
+            .attr('fill', d => {
+                        // console.log(color(ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher']))
+                        return color(ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher'])
+            })
+            .attr('data-fips', d => {
+                return d['id']
+            })
+            .attr('data-education', d => {
+                return ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher'];
+            })
+            .attr('d', path)
     
         svg.append('path')
            .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
