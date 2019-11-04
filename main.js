@@ -46,7 +46,7 @@ function cMap(dataset) {
            .join('path')
             .attr('class', 'county')
             .attr('fill', d => {
-                        // console.log(color(ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher']))
+                        console.log(color(ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher']))
                         return color(ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher'])
             })
             .attr('data-fips', d => {
@@ -63,8 +63,26 @@ function cMap(dataset) {
            .attr('stroke', 'white')
            .attr('stroke-linejoin', 'round')
            .attr('d', path)
+
+
+        let colors = ['green', 'red', 'blue', 'yellow', 'pink']
+
+
+        svg.append('div')
+           .attr('id', 'legend')
+           .selectAll('rect')
+           .data(colors)
+           .enter()
+           .append('rect')
+            .attr('width', '1rem')
+            .attr('height', '1rem')
+            .attr('fill', d => d)
+           
     
         return svg.node();
+
+
+        
 
     
 
