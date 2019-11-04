@@ -12,6 +12,9 @@ function cMap(dataset) {
 
         const us = dataset[0];
         const ed = dataset[1];
+    
+        const path = d3.geoPath();
+        const color = d3.scaleQuantize([3, 75], d3.schemePuBu[8])
 
         d3.select('body')
             .append('h2')
@@ -23,29 +26,24 @@ function cMap(dataset) {
             .attr('id', 'description')
             .text('Percentage of adults age 25 and older with a bachelor\'s degree or higher (2010-2014)')
     
-        
-        const width = 1200
-        const height = 500
-        const padding = 80
-    
-        const color = d3.scaleQuantize([3, 75], d3.schemeBlues[8])
-    
         const svg = d3.select('body')
                         .append('svg')
                         .attr('viewBox', us['bbox'])
-    
-        const path = d3.geoPath();
 
+        svg.append('g')
+            .attr('id', 'legend')
+            .attr('transform', 'translate(950, 350)')
+            .call(d3.legendColor().scale(color))
+    
         let tooltip = d3.select('body')
                         .append('div')
                         .attr('id', 'tooltip')
                         .style('position', 'absolute')
-                        .attr('fill', 'aliceblue')
-                        .style('opacity', '0.7')
+                        .style('background-color', 'aliceblue')
+                        .style('opacity', '0.85')
                         .style('border-radius', '5px')
+                        .style('padding', '1rem')
                         .style('visibility', 'hidden')
-
-
     
         svg.append('g')
            .selectAll('path')
@@ -53,7 +51,6 @@ function cMap(dataset) {
            .join('path')
             .attr('class', 'county')
             .attr('fill', d => {
-                        // console.log(color(ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher']))
                         return color(ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher'])
             })
             .attr('data-fips', d => {
@@ -64,11 +61,13 @@ function cMap(dataset) {
             })
             .attr('d', path)
             .on('mouseover', d => {
-
-                let dEdu = ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher'];
-                console.log(dEdu)
                 tooltip.style('visibility', 'visible')
-                tooltip.attr('data-education', dEdu)
+                tooltip.attr('data-education', ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher'])
+                tooltip.html(ed.filter(o => o['fips'] === d['id'])[0]['area_name'] + ', ' + 
+                             ed.filter(o => o['fips'] === d['id'])[0]['state'] + ' - ' + 
+                             ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher'] + '%')
+                        .style('top', d3.event['screenY'] - 145)
+                        .style('left', d3.event['screenX'] + 15)
             })
             .on('mouseout', d => {
                 tooltip.style('visibility', 'hidden')
@@ -80,29 +79,8 @@ function cMap(dataset) {
            .attr('stroke', 'white')
            .attr('stroke-linejoin', 'round')
            .attr('d', path)
-
-
-        let colors = ['green', 'red', 'blue', 'yellow', 'pink']
-
-        svg.append('div')
-           .attr('id', 'legend')
-           .selectAll('rect')
-           .data(colors)
-           .enter()
-           .append('rect')
-            .attr('width', '1rem')
-            .attr('height', '1rem')
-            .attr('fill', d => d)
-
-        
-           
-    
+   
         return svg.node();
-
-
-        
-
-    
 
 
 }
