@@ -66,8 +66,8 @@ function cMap(dataset) {
                 tooltip.html(ed.filter(o => o['fips'] === d['id'])[0]['area_name'] + ', ' + 
                              ed.filter(o => o['fips'] === d['id'])[0]['state'] + ' - ' + 
                              ed.filter(o => o['fips'] === d['id'])[0]['bachelorsOrHigher'] + '%')
-                        .style('top', d3.event['screenY'] - 145)
-                        .style('left', d3.event['screenX'] + 15)
+                        .style('top', (d3.event['screenY'] - 145) + 'px')
+                        .style('left', (d3.event['screenX'] + 15) + 'px')
             })
             .on('mouseout', d => {
                 tooltip.style('visibility', 'hidden')
